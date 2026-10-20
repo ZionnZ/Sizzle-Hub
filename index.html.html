@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spice N Sizzle Food Hub & Ota Business Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#D32F2F',
+                            darkRed: '#B71C1C',
+                            amber: '#FF9800',
+                            gold: '#FFC107',
+                            dark: '#121212',
+                            cardBg: '#1E1E1E',
+                            surface: '#292929'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom Scrollbar for Smooth Modern Feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121212;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF9800;
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-brand-dark text-gray-100 font-sans min-h-screen flex flex-col selection:bg-brand-amber selection:text-black">
+
+    <!-- TOP HEADER & BRANDING -->
+    <header class="bg-brand-cardBg border-b border-gray-800 sticky top-0 z-40 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo & Business Selector Header -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-tr from-brand-red to-brand-amber rounded-2xl flex items-center justify-center shadow-lg shadow-brand-red/20">
+                        <i data-lucide="utensils-crossed" class="w-7 h-7 text-white"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 id="headerBizName" class="text-xl sm:text-2xl font-black text-white tracking-tight">Spice N Sizzle</h1>
+                            <span class="bg-brand-red/20 text-brand-amber text-xs font-semibold px-2.5 py-0.5 rounded-full border border-brand-red/30">Ota Hub</span>
+                        </div>
+                        <p class="text-xs text-gray-400">Idiroko Road, Ota • Premier Local Favorites</p>
+                    </div>
+                </div>
+
+                <!-- Right Side Actions & Cart Button -->
+                <div class="flex items-center space-x-3">
+                    <button onclick="toggleCartModal()" class="relative bg-brand-surface hover:bg-gray-700 text-white p-3 rounded-xl flex items-center space-x-2 transition border border-gray-700">
+                        <i data-lucide="shopping-bag" class="w-5 h-5 text-brand-amber"></i>
+                        <span class="hidden sm:inline text-sm font-semibold">Order Cart</span>
+                        <span id="cartCountBadge" class="bg-brand-red text-white text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN NAVIGATION TABS -->
+        <div class="bg-black/40 backdrop-blur border-t border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-2 overflow-x-auto py-2 no-scrollbar">
+                <button onclick="switchTab('menu')" id="tab-menu" class="nav-tab active-tab text-sm font-semibold px-4 py-2 rounded-lg flex items-center space-x-2 whitespace-nowrap transition">
+                    <i data-lucide="book-open" class="w-4 h-4"></i>
+                    <span>Menu & Ordering</span>
+                </button>
+                <button onclick="switchTab('businesses')" id="tab-businesses" class="nav-tab text-sm font-semibold px-4 py-2 rounded-lg flex items-center space-x-2 whitespace-nowrap transition text-gray-400 hover:text-white">
+                    <i data-lucide="store" class="w-4 h-4"></i>
+                    <span>Ota Business Switcher</span>
+                </button>
+                <button onclick="switchTab('deals')" id="tab-deals" class="nav-tab text-sm font-semibold px-4 py-2 rounded-lg flex items-center space-x-2 whitespace-nowrap transition text-gray-400 hover:text-white">
+                    <i data-lucide="flame" class="w-4 h-4"></i>
+                    <span>Hot Deals & Combos</span>
+                </button>
+                <button onclick="switchTab('reviews')" id="tab-reviews" class="nav-tab text-sm font-semibold px-4 py-2 rounded-lg flex items-center space-x-2 whitespace-nowrap transition text-gray-400 hover:text-white">
+                    <i data-lucide="star" class="w-4 h-4"></i>
+                    <span>Reviews & Feedback</span>
+                </button>
+                <button onclick="switchTab('location')" id="tab-location" class="nav-tab text-sm font-semibold px-4 py-2 rounded-lg flex items-center space-x-2 whitespace-nowrap transition text-gray-400 hover:text-white">
+                    <i data-lucide="map-pin" class="w-4 h-4"></i>
+                    <span>Contact & Map</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN BODY CONTENT CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ================= TAB 1: MENU & ORDERING ================= -->
+        <section id="view-menu" class="tab-content animate-fadeIn">
+            <!-- HERO BANNER FOR SPICE N SIZZLE -->
+            <div id="bizHeroBanner" class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-brand-red via-brand-darkRed to-black p-8 sm:p-12 mb-8 shadow-2xl border border-red-900/40">
+                <div class="relative z-10 max-w-2xl">
+                    <span class="bg-brand-amber/20 text-brand-amber font-bold text-xs uppercase tracking-wider px-3 py-1 rounded-full border border-brand-amber/30">
+                        Fresh & Fast in Ota
+                    </span>
+                    <h2 id="bannerTitle" class="text-3xl sm:text-5xl font-black text-white mt-3 mb-4 leading-tight">
+                        Authentic Spicy Delights Delivered Fresh
+                    </h2>
+                    <p id="bannerDesc" class="text-gray-300 text-sm sm:text-base mb-6">
+                        Order online from Spice N Sizzle Food Hub along Idiroko Road. Fast delivery to Covenant University, Canaanland, Sango, and surrounding areas.
+                    </p>
+                    <div class="flex flex-wrap gap-4 items-center">
+                        <a href="#menu-catalog" class="bg-brand-amber hover:bg-yellow-500 text-black font-bold px-6 py-3 rounded-xl shadow-lg transition flex items-center space-x-2">
+                            <span>Browse Full Menu</span>
+                            <i data-lucide="arrow-down" class="w-4 h-4"></i>
+                        </a>
+                        <div class="flex items-center space-x-2 bg-black/40 px-4 py-2.5 rounded-xl border border-gray-800 text-xs text-gray-300">
+                            <i data-lucide="clock" class="w-4 h-4 text-brand-amber"></i>
+                            <span>Mon - Sat: 8:00 AM - 10:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MENU CATEGORIES & FILTER -->
+            <div id="menu-catalog" class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-2xl font-bold text-white">Food Hub Catalog</h3>
+                    <p class="text-xs text-gray-400">Select items to add directly to your WhatsApp order</p>
+                </div>
+                <div class="flex flex-wrap gap-2" id="categoryFilters">
+                    <button onclick="filterCategory('All')" class="cat-btn active-cat bg-brand-red text-white text-xs font-semibold px-4 py-2 rounded-xl border border-brand-red transition">All Items</button>
+                    <button onclick="filterCategory('Jollof & Mains')" class="cat-btn bg-brand-cardBg text-gray-400 hover:text-white text-xs font-semibold px-4 py-2 rounded-xl border border-gray-800 transition">Jollof & Mains</button>
+                    <button onclick="filterCategory('Grill & Proteins')" class="cat-btn bg-brand-cardBg text-gray-400 hover:text-white text-xs font-semibold px-4 py-2 rounded-xl border border-gray-800 transition">Grill & Proteins</button>
+                    <button onclick="filterCategory('Drinks & Desserts')" class="cat-btn bg-brand-cardBg text-gray-400 hover:text-white text-xs font-semibold px-4 py-2 rounded-xl border border-gray-800 transition">Drinks & Desserts</button>
+                </div>
+            </div>
+
+            <!-- MENU GRID -->
+            <div id="menuGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Items populated dynamically -->
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: BUSINESS SWITCHER ================= -->
+        <section id="view-businesses" class="tab-content hidden animate-fadeIn">
+            <div class="mb-8 text-center max-w-2xl mx-auto">
+                <h2 class="text-3xl font-extrabold text-white mb-2">Explore Ota Local Businesses</h2>
+                <p class="text-sm text-gray-400">Select a business below to view details, switch context, or explore their local listings.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="businessDirectory">
+                <!-- Cards dynamically populated -->
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: HOT DEALS ================= -->
+        <section id="view-deals" class="tab-content hidden animate-fadeIn">
+            <div class="mb-8">
+                <h2 class="text-3xl font-black text-white mb-2">Spice N Sizzle Special Combos</h2>
+                <p class="text-gray-400 text-sm">Save money with our daily curated local feast boxes</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Deal 1 -->
+                <div class="bg-gradient-to-br from-brand-cardBg to-brand-surface p-6 rounded-3xl border border-brand-amber/30 relative overflow-hidden flex flex-col justify-between">
+                    <span class="absolute top-4 right-4 bg-brand-red text-white text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">Save ₦1,000</span>
+                    <div>
+                        <div class="w-12 h-12 bg-brand-amber/20 text-brand-amber rounded-2xl flex items-center justify-center mb-4">
+                            <i data-lucide="flame" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Student & Campus Feast Box</h3>
+                        <p class="text-gray-300 text-sm mb-4">Double Portion Sizzle Special Jollof + 2 Spiced Peppered Beef + Chilled Soft Drink.</p>
+                        <div class="flex items-baseline space-x-3 mb-6">
+                            <span class="text-2xl font-extrabold text-brand-amber">₦6,500</span>
+                            <span class="text-sm text-gray-500 line-through">₦7,500</span>
+                        </div>
+                    </div>
+                    <button onclick="addDealToCart('Student & Campus Feast Box', 6500)" class="w-full bg-brand-red hover:bg-brand-darkRed text-white font-bold py-3 rounded-xl transition flex items-center justify-center space-x-2">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Add Deal to Order</span>
+                    </button>
+                </div>
+
+                <!-- Deal 2 -->
+                <div class="bg-gradient-to-br from-brand-cardBg to-brand-surface p-6 rounded-3xl border border-brand-amber/30 relative overflow-hidden flex flex-col justify-between">
+                    <span class="absolute top-4 right-4 bg-brand-amber text-black text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">Popular</span>
+                    <div>
+                        <div class="w-12 h-12 bg-brand-red/20 text-brand-red rounded-2xl flex items-center justify-center mb-4">
+                            <i data-lucide="party-popper" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Family & Friends Platter</h3>
+                        <p class="text-gray-300 text-sm mb-4">Large Fried Rice Combo + Full Grilled Suya Chicken + 2 Fresh Smoothies + Extra Plantains.</p>
+                        <div class="flex items-baseline space-x-3 mb-6">
+                            <span class="text-2xl font-extrabold text-brand-amber">₦14,000</span>
+                            <span class="text-sm text-gray-500 line-through">₦16,000</span>
+                        </div>
+                    </div>
+                    <button onclick="addDealToCart('Family & Friends Platter', 14000)" class="w-full bg-brand-red hover:bg-brand-darkRed text-white font-bold py-3 rounded-xl transition flex items-center justify-center space-x-2">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Add Deal to Order</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: REVIEWS ================= -->
+        <section id="view-reviews" class="tab-content hidden animate-fadeIn">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Submit Review Form -->
+                <div class="bg-brand-cardBg p-6 rounded-3xl border border-gray-800">
+                    <h3 class="text-xl font-bold text-white mb-2">Leave a Review</h3>
+                    <p class="text-xs text-gray-400 mb-6">Share your experience at Spice N Sizzle Food Hub</p>
+                    <form id="reviewForm" onsubmit="handleReviewSubmit(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs text-gray-300 font-semibold mb-1">Your Name</label>
+                            <input type="text" id="reviewerName" required placeholder="e.g. Samuel O." class="w-full bg-brand-surface border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-amber">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-300 font-semibold mb-1">Rating</label>
+                            <select id="reviewerRating" class="w-full bg-brand-surface border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-amber">
+                                <option value="5">⭐⭐⭐⭐⭐ (5/5) - Excellent</option>
+                                <option value="4">⭐⭐⭐⭐ (4/5) - Very Good</option>
+                                <option value="3">⭐⭐⭐ (3/5) - Average</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-300 font-semibold mb-1">Feedback / Comment</label>
+                            <textarea id="reviewerComment" required rows="3" placeholder="How was the food and delivery?" class="w-full bg-brand-surface border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-amber"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-brand-amber hover:bg-yellow-500 text-black font-bold py-3 rounded-xl transition">Submit Review</button>
+                    </form>
+                </div>
+
+                <!-- Existing Reviews List -->
+                <div class="lg:col-span-2 space-y-4" id="reviewsContainer">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-xl font-bold text-white">Customer Feedback (4.5 Avg Rating)</h3>
+                        <span class="text-xs text-gray-400">Showing verified local reviews</span>
+                    </div>
+
+                    <!-- Reviews dynamically rendered here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 5: LOCATION & CONTACT ================= -->
+        <section id="view-location" class="tab-content hidden animate-fadeIn">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-brand-cardBg p-6 sm:p-8 rounded-3xl border border-gray-800 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-6">
+                            <div class="w-10 h-10 bg-brand-red/20 text-brand-red rounded-xl flex items-center justify-center">
+                                <i data-lucide="map-pin" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">Spice N Sizzle Location</h3>
+                                <p class="text-xs text-gray-400">Ota Hub Center</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 text-sm text-gray-300">
+                            <div class="flex items-start space-x-3">
+                                <i data-lucide="navigation" class="w-5 h-5 text-brand-amber flex-shrink-0 mt-0.5"></i>
+                                <span><strong>Address:</strong> Idiroko Road, Near Covenant University Gate / Canaanland, Ota, Ogun State.</span>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <i data-lucide="phone" class="w-5 h-5 text-brand-amber flex-shrink-0 mt-0.5"></i>
+                                <span><strong>WhatsApp Direct:</strong> +234 812 345 6789</span>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <i data-lucide="clock" class="w-5 h-5 text-brand-amber flex-shrink-0 mt-0.5"></i>
+                                <span><strong>Hours:</strong> Mon - Sat: 8:00 AM - 10:00 PM (Closed Sundays)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-gray-800">
+                        <a href="https://maps.google.com/?q=Ota+Ogun+State" target="_blank" class="w-full bg-brand-surface hover:bg-gray-700 text-white font-bold py-3 rounded-xl border border-gray-700 transition flex items-center justify-center space-x-2">
+                            <i data-lucide="external-link" class="w-4 h-4"></i>
+                            <span>Open in Google Maps</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Interactive Location Info & Coverage Area -->
+                <div class="bg-brand-cardBg p-6 sm:p-8 rounded-3xl border border-gray-800 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-4">Supported Delivery Zones</h3>
+                        <p class="text-xs text-gray-400 mb-6">Fast motorcycle dispatch available across Ota district:</p>
+
+                        <ul class="space-y-3 text-sm text-gray-300">
+                            <li class="flex items-center justify-between p-3 bg-brand-surface rounded-xl">
+                                <span>Covenant University Campus (UG/PG Halls)</span>
+                                <span class="text-brand-amber font-semibold">₦500 delivery</span>
+                            </li>
+                            <li class="flex items-center justify-between p-3 bg-brand-surface rounded-xl">
+                                <span>Canaanland & Faith Tabernacle Gate</span>
+                                <span class="text-brand-amber font-semibold">₦500 delivery</span>
+                            </li>
+                            <li class="flex items-center justify-between p-3 bg-brand-surface rounded-xl">
+                                <span>Idiroko Road Environs</span>
+                                <span class="text-brand-amber font-semibold">₦700 delivery</span>
+                            </li>
+                            <li class="flex items-center justify-between p-3 bg-brand-surface rounded-xl">
+                                <span>Sango Ota Central / Tollgate</span>
+                                <span class="text-brand-amber font-semibold">₦1,000 delivery</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SHOPPING CART & WHATSAPP CHECKOUT MODAL -->
+    <div id="cartModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-end animate-fadeIn">
+        <div class="bg-brand-cardBg w-full max-w-lg h-full sm:h-auto sm:max-h-[90vh] sm:m-4 sm:rounded-3xl border border-gray-800 p-6 flex flex-col justify-between overflow-y-auto">
+            
+            <div>
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between pb-4 border-b border-gray-800 mb-4">
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="shopping-cart" class="w-5 h-5 text-brand-amber"></i>
+                        <h3 class="text-xl font-bold text-white">Your Order Details</h3>
+                    </div>
+                    <button onclick="toggleCartModal()" class="text-gray-400 hover:text-white p-1">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+                <!-- Selected Items List -->
+                <div id="cartItemsList" class="space-y-3 mb-6 max-h-48 overflow-y-auto pr-1">
+                    <!-- Populated via JS -->
+                </div>
+
+                <!-- Checkout Form -->
+                <div class="space-y-4 pt-4 border-t border-gray-800">
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider">Delivery Details (Ota)</h4>
+                    <div>
+                        <label class="block text-xs text-gray-300 mb-1">Full Name</label>
+                        <input type="text" id="custName" placeholder="e.g. Daniel Adebayo" class="w-full bg-brand-surface border border-gray-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-amber">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-300 mb-1">Phone Number</label>
+                        <input type="tel" id="custPhone" placeholder="08012345678" class="w-full bg-brand-surface border border-gray-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-amber">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-300 mb-1">Delivery Area in Ota</label>
+                        <select id="custArea" onchange="updateCartTotal()" class="w-full bg-brand-surface border border-gray-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-amber">
+                            <option value="500">Covenant University Campus (₦500)</option>
+                            <option value="500">Canaanland Environs (₦500)</option>
+                            <option value="700">Idiroko Road Area (₦700)</option>
+                            <option value="1000">Sango Ota Central (₦1,000)</option>
+                            <option value="0">Pickup at Spice N Sizzle Hub (Free)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-300 mb-1">Detailed Address / Room No.</label>
+                        <input type="text" id="custAddress" placeholder="e.g. Paul Hall Room B201 or Nearby Landmark" class="w-full bg-brand-surface border border-gray-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-amber">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total & Checkout Button -->
+            <div class="pt-6 border-t border-gray-800 mt-6">
+                <div class="space-y-2 mb-4 text-sm">
+                    <div class="flex justify-between text-gray-400">
+                        <span>Subtotal</span>
+                        <span id="summarySubtotal">₦0</span>
+                    </div>
+                    <div class="flex justify-between text-gray-400">
+                        <span>Delivery Fee</span>
+                        <span id="summaryDelivery">₦500</span>
+                    </div>
+                    <div class="flex justify-between text-lg font-bold text-white pt-2 border-t border-gray-800">
+                        <span>Total Amount</span>
+                        <span id="summaryTotal" class="text-brand-amber">₦500</span>
+                    </div>
+                </div>
+
+                <button onclick="sendWhatsAppOrder()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3.5 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
+                    <i data-lucide="message-square" class="w-5 h-5"></i>
+                    <span>Send Order via WhatsApp</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-black border-t border-gray-800 py-8 text-center text-xs text-gray-500 mt-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="mb-2">Spice N Sizzle Food Hub & Ota Local Directory &copy; 2026. All rights reserved.</p>
+            <p>Serving Idiroko Road, Covenant University Campus, Canaanland & Sango Ota.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        // Data Structures
+        const menuItems = [
+            { id: 1, name: 'Sizzle Special Jollof', price: 2500, category: 'Jollof & Mains', desc: 'Richly spiced smoky Jollof rice served with fried plantain and peppered chicken.', tag: 'Bestseller' },
+            { id: 2, name: 'Fried Rice Combo', price: 2800, category: 'Jollof & Mains', desc: 'Savory fried rice loaded with diced veggies and served with crispy fried fish.', tag: 'Popular' },
+            { id: 3, name: 'Spicy Peppered Beef', price: 1800, category: 'Grill & Proteins', desc: 'Tender beef chunks tossed in our signature extra-spicy Ota pepper sauce.', tag: 'Spicy' },
+            { id: 4, name: 'Full Suya Chicken Quarter', price: 2200, category: 'Grill & Proteins', desc: 'Flame-grilled quarter chicken seasoned with authentic northern Yaji spice.', tag: 'Fresh' },
+            { id: 5, name: 'Chilled Zobo Drink (50cl)', price: 700, category: 'Drinks & Desserts', desc: 'House-brewed hibiscus drink infused with ginger, pineapple and clove.', tag: 'Local Refreshment' },
+            { id: 6, name: 'Fresh Fruit Smoothie', price: 1200, category: 'Drinks & Desserts', desc: 'Blended banana, watermelon, and pineapple without artificial sugar.', tag: 'Healthy' }
+        ];
+
+        const localBusinesses = [
+            {
+                name: "Spice N Sizzle Food Hub",
+                type: "Restaurant & Grill",
+                location: "Idiroko Road, Ota",
+                hours: "Mon - Sat: 8:00 AM - 10:00 PM",
+                rating: "4.5 / 5",
+                desc: "Premier local food hub serving fiery grilled dishes, Jollof rice, and refreshments.",
+                isPrimary: true
+            },
+            {
+                name: "Post Graduate Cafe",
+                type: "Campus Refreshment Cafe",
+                location: "Adjacent Campus, Ota",
+                hours: "Daily: 8:00 AM - 10:00 PM",
+                rating: "4.3 / 5",
+                desc: "Cozy spot for quick snacks, coffee, soft drinks, and light study meals.",
+                isPrimary: false
+            },
+            {
+                name: "Prince Ebeano Supermarket",
+                type: "Retail Supermarket Chain",
+                location: "GRA Ikeja / Nearby Extension",
+                hours: "Daily: 8:00 AM - 9:00 PM",
+                rating: "4.6 / 5",
+                desc: "Extensive supermarket stock for household provisions, fresh groceries, and bakery.",
+                isPrimary: false
+            },
+            {
+                name: "Food Corner Supermarket",
+                type: "Grocery & Retail Store",
+                location: "Victoria Island / Local Outlet",
+                hours: "Daily: 9:00 AM - 9:00 PM",
+                rating: "4.2 / 5",
+                desc: "Convenient supermarket offering packaged snacks, drinks, and essential items.",
+                isPrimary: false
+            },
+            {
+                name: "De Prince Super Market",
+                type: "Neighborhood Grocery",
+                location: "Gbagada / Ota Outlet",
+                hours: "Daily: 8:30 AM - 9:30 PM",
+                rating: "4.4 / 5",
+                desc: "Reliable store for daily household goods, personal care, and provisions.",
+                isPrimary: false
+            }
+        ];
+
+        let reviewsList = [
+            { name: "Blessing A.", rating: 5, comment: "The Sizzle Jollof was incredible! Delivery to Covenant CU gate was under 25 minutes." },
+            { name: "Dr. Tunde E.", rating: 4, comment: "Spicy peppered beef is top-notch. Great food quality along Idiroko road." }
+        ];
+
+        let cart = [];
+
+        // App Initialization
+        window.onload = function() {
+            lucide.createIcons();
+            renderMenu('All');
+            renderBusinesses();
+            renderReviews();
+            updateCartTotal();
+        };
+
+        // Tab Switching Logic
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-tab').forEach(el => {
+                el.classList.remove('active-tab', 'text-white', 'bg-brand-red');
+                el.classList.add('text-gray-400');
+            });
+
+            document.getElementById(`view-${tabName}`).classList.remove('hidden');
+            const targetTab = document.getElementById(`tab-${tabName}`);
+            targetTab.classList.add('active-tab', 'text-white', 'bg-brand-red');
+            targetTab.classList.remove('text-gray-400');
+        }
+
+        // Render Menu Catalog
+        function renderMenu(category) {
+            const container = document.getElementById('menuGrid');
+            container.innerHTML = '';
+
+            const filtered = category === 'All' ? menuItems : menuItems.filter(i => i.category === category);
+
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-brand-cardBg rounded-3xl p-5 border border-gray-800 flex flex-col justify-between hover:border-brand-amber/40 transition group";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="bg-brand-surface text-brand-amber text-[10px] font-bold px-2.5 py-1 rounded-full border border-gray-700">${item.tag}</span>
+                            <span class="text-xl font-black text-white">₦${item.price.toLocaleString()}</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-1 group-hover:text-brand-amber transition">${item.name}</h4>
+                        <p class="text-xs text-gray-400 mb-4">${item.desc}</p>
+                    </div>
+                    <button onclick="addToCart(${item.id})" class="w-full bg-brand-surface hover:bg-brand-red text-white text-sm font-bold py-2.5 rounded-xl border border-gray-700 hover:border-brand-red transition flex items-center justify-center space-x-2">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Add to Order</span>
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        // Filter Category
+        function filterCategory(cat) {
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-red', 'text-white');
+                btn.classList.add('bg-brand-cardBg', 'text-gray-400');
+            });
+            event.currentTarget.classList.add('bg-brand-red', 'text-white');
+            event.currentTarget.classList.remove('bg-brand-cardBg', 'text-gray-400');
+            renderMenu(cat);
+        }
+
+        // Cart Management
+        function addToCart(itemId) {
+            const item = menuItems.find(m => m.id === itemId);
+            const existing = cart.find(c => c.id === itemId);
+
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ ...item, qty: 1 });
+            }
+            updateCartTotal();
+            showToast(`Added ${item.name} to cart`);
+        }
+
+        function addDealToCart(name, price) {
+            const existing = cart.find(c => c.name === name);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ id: Date.now(), name: name, price: price, qty: 1 });
+            }
+            updateCartTotal();
+            toggleCartModal();
+        }
+
+        function updateQty(id, delta) {
+            const item = cart.find(c => c.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) {
+                    cart = cart.filter(c => c.id !== id);
+                }
+            }
+            updateCartTotal();
+        }
+
+        function updateCartTotal() {
+            const cartItemsList = document.getElementById('cartItemsList');
+            const cartCountBadge = document.getElementById('cartCountBadge');
+            cartItemsList.innerHTML = '';
+
+            let subtotal = 0;
+            let totalItems = 0;
+
+            if (cart.length === 0) {
+                cartItemsList.innerHTML = `<p class="text-xs text-gray-500 text-center py-4">Your order cart is empty.</p>`;
+            } else {
+                cart.forEach(item => {
+                    subtotal += item.price * item.qty;
+                    totalItems += item.qty;
+
+                    const row = document.createElement('div');
+                    row.className = "flex items-center justify-between bg-brand-surface p-3 rounded-xl border border-gray-800 text-xs";
+                    row.innerHTML = `
+                        <div>
+                            <p class="font-bold text-white">${item.name}</p>
+                            <p class="text-gray-400">₦${item.price.toLocaleString()} x ${item.qty}</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="updateQty(${item.id}, -1)" class="w-6 h-6 bg-gray-800 text-white rounded flex items-center justify-center font-bold">-</button>
+                            <span class="font-bold text-white">${item.qty}</span>
+                            <button onclick="updateQty(${item.id}, 1)" class="w-6 h-6 bg-brand-red text-white rounded flex items-center justify-center font-bold">+</button>
+                        </div>
+                    `;
+                    cartItemsList.appendChild(row);
+                });
+            }
+
+            const deliveryFee = parseInt(document.getElementById('custArea').value || '500');
+            const total = subtotal + deliveryFee;
+
+            cartCountBadge.innerText = totalItems;
+            document.getElementById('summarySubtotal').innerText = `₦${subtotal.toLocaleString()}`;
+            document.getElementById('summaryDelivery').innerText = `₦${deliveryFee.toLocaleString()}`;
+            document.getElementById('summaryTotal').innerText = `₦${total.toLocaleString()}`;
+        }
+
+        function toggleCartModal() {
+            const modal = document.getElementById('cartModal');
+            modal.classList.toggle('hidden');
+        }
+
+        // WhatsApp Order Dispatch
+        function sendWhatsAppOrder() {
+            if (cart.length === 0) {
+                alert("Your cart is empty! Please add food items first.");
+                return;
+            }
+
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const address = document.getElementById('custAddress').value.trim();
+            const areaSelect = document.getElementById('custArea');
+            const areaText = areaSelect.options[areaSelect.selectedIndex].text;
+            const deliveryFee = parseInt(areaSelect.value);
+
+            if (!name || !phone || !address) {
+                alert("Please fill in your Name, Phone Number, and Address before sending.");
+                return;
+            }
+
+            let subtotal = 0;
+            let itemListText = "";
+
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.qty;
+                subtotal += itemTotal;
+                itemListText += `${index + 1}. *${item.name}* (x${item.qty}) - ₦${itemTotal.toLocaleString()}\n`;
+            });
+
+            const grandTotal = subtotal + deliveryFee;
+
+            const message = `*NEW FOOD ORDER - SPICE N SIZZLE HUB (OTA)*\n\n` +
+                `*Customer:* ${name}\n` +
+                `*Phone:* ${phone}\n` +
+                `*Delivery Area:* ${areaText}\n` +
+                `*Specific Address:* ${address}\n\n` +
+                `*ORDER ITEMS:*\n${itemListText}\n` +
+                `*Subtotal:* ₦${subtotal.toLocaleString()}\n` +
+                `*Delivery Fee:* ₦${deliveryFee.toLocaleString()}\n` +
+                `*GRAND TOTAL:* ₦${grandTotal.toLocaleString()}\n\n` +
+                `Please confirm my order and send payment details!`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/2348123456789?text=${encodedMessage}`;
+
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Render Local Business Directory
+        function renderBusinesses() {
+            const container = document.getElementById('businessDirectory');
+            container.innerHTML = '';
+
+            localBusinesses.forEach(biz => {
+                const card = document.createElement('div');
+                card.className = `bg-brand-cardBg rounded-3xl p-6 border ${biz.isPrimary ? 'border-brand-red' : 'border-gray-800'} flex flex-col justify-between`;
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-xs font-bold px-3 py-1 rounded-full ${biz.isPrimary ? 'bg-brand-red text-white' : 'bg-brand-surface text-gray-300'}">${biz.type}</span>
+                            <span class="text-xs font-bold text-brand-amber">⭐ ${biz.rating}</span>
+                        </div>
+                        <h3 class="text-xl font-extrabold text-white mb-1">${biz.name}</h3>
+                        <p class="text-xs text-brand-amber font-medium mb-3">${biz.location}</p>
+                        <p class="text-xs text-gray-400 mb-4 leading-relaxed">${biz.desc}</p>
+                    </div>
+                    <div class="pt-4 border-t border-gray-800 flex justify-between items-center text-xs">
+                        <span class="text-gray-500">${biz.hours}</span>
+                        <button onclick="selectBusiness('${biz.name}')" class="text-brand-amber font-bold hover:underline flex items-center space-x-1">
+                            <span>${biz.isPrimary ? 'Active Business' : 'Switch Context'}</span>
+                            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function selectBusiness(name) {
+            document.getElementById('headerBizName').innerText = name;
+            document.getElementById('bannerTitle').innerText = `${name} Portal`;
+            document.getElementById('bannerDesc').innerText = `Viewing details, stock items, and online showcase for ${name} in the Ota district.`;
+            switchTab('menu');
+            showToast(`Switched view to ${name}`);
+        }
+
+        // Reviews System
+        function renderReviews() {
+            const container = document.getElementById('reviewsContainer');
+            container.innerHTML = '';
+
+            reviewsList.forEach(r => {
+                const card = document.createElement('div');
+                card.className = "bg-brand-cardBg p-4 rounded-2xl border border-gray-800 text-xs";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="font-bold text-white text-sm">${r.name}</span>
+                        <span class="text-brand-amber font-bold">${'⭐'.repeat(r.rating)}</span>
+                    </div>
+                    <p class="text-gray-300 leading-relaxed">${r.comment}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function handleReviewSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('reviewerName').value;
+            const rating = parseInt(document.getElementById('reviewerRating').value);
+            const comment = document.getElementById('reviewerComment').value;
+
+            reviewsList.unshift({ name, rating, comment });
+            renderReviews();
+            document.getElementById('reviewForm').reset();
+            showToast("Thank you for your review!");
+        }
+
+        // Quick Notification Toast
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-6 right-6 bg-brand-amber text-black font-bold px-4 py-3 rounded-xl shadow-2xl z-50 text-xs animate-fadeIn flex items-center space-x-2";
+            toast.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4"></i><span>${msg}</span>`;
+            document.body.appendChild(toast);
+            lucide.createIcons();
+            setTimeout(() => toast.remove(), 2500);
+        }
+    </script>
+</body>
+</html>
